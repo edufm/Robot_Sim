@@ -126,7 +126,7 @@ class simulate():
         self.ax.set_ylabel("Y")
         self.ax.set_zlabel("Z")
         
-        self.fig.canvas.draw()
+        self.fig.canvas.draw_idle()
     
     
     def reset(self, event):

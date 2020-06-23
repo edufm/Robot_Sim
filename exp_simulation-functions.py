@@ -36,11 +36,11 @@ if False:
     rs.plot(rs.trace(dvhb.to_cordsys()), ind_limit=False)
     
 # Code to simulate the robot
-if False:
+if True:
     rs.simulate(dvhb)
 
 # Code to animate robot movement
-if True:
+if False:
     initial_pos = [0,-90,0,0,0,0]
     final_pos = [90,90,0,180,0,0]
     
@@ -50,11 +50,11 @@ if True:
 # Code to try to move robot to new position and animate the movement
 if False:
     new_coords = [[-0.766 ,  0.6428, -0.    ,  0.0],
-                  [ 0.    , -0.    , -1.    , -0.2214],
+                  [ 0.    , -0.    , -1.    ,  -0.2214],
                   [-0.6428, -0.766 ,  0.    ,  0.9793],
                   [ 0.    ,  0.    ,  0.    ,  1.    ]]
     joint_pos, coords= dvhb.inverse_kinematic(new_coords, keep_results=True)
     print(joint_pos)
-    print(coords)
+    print(coords.round(4))
     
     rs.animate(dvhb, dvhb.get_all_curr(), joint_pos)
