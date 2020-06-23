@@ -21,9 +21,6 @@ def plot(cordsys_list, ind_limit=False):
     ax.set_ylabel("Y")
     ax.set_zlabel("Z")
     
-    # Cria um ponto na origem
-    ax.plot([0], [0], [0], "bo", markersize=20)
-    
     # Verifica quais são todos os pontos de dados
     all_points = []
     for cordsys in cordsys_list:
@@ -34,15 +31,18 @@ def plot(cordsys_list, ind_limit=False):
             matrix = cordsys.matrix
             
         all_points.append(matrix[:3, 3])
+        
     all_points = np.array(all_points)
     maxs, mins = all_points.max(axis=0), all_points.min(axis=0)
-    abs_max, abs_min = max(maxs), min(mins)
+    abs_max = max(max(abs(maxs)), min(abs(mins)))
     vec_scale = 0.1*abs_max
     space = 2*vec_scale
     
-    # Liga os pontos com uma linha
+    # Creates a point in the origin
+    ax.plot([0], [0], [0], "ro")
+    # Creates teh robot body
     ax.plot(all_points[:, 0], all_points[:, 1], all_points[:, 2])
-    
+    ax.plot(all_points[1:, 0], all_points[1:, 1], all_points[1:, 2], "bo")
     
     for cordsys in cordsys_list:
         
@@ -56,7 +56,6 @@ def plot(cordsys_list, ind_limit=False):
         cord_z = matrix[:3, 2] * vec_scale
         x, y, z = matrix[:3, 3]
         
-    
         ax.quiver(x, y, z, *cord_x, color="red")
         ax.quiver(x, y, z, *cord_y, color="green")
         ax.quiver(x, y, z, *cord_z, color="blue")
@@ -67,6 +66,6 @@ def plot(cordsys_list, ind_limit=False):
         ax.set_ylim([mins[1]-space, maxs[1]+space])
         ax.set_zlim([mins[2]-space, maxs[2]+space])
     else:
-        ax.set_xlim([abs_min-space, abs_max+space])
-        ax.set_ylim([abs_min-space, abs_max+space])
-        ax.set_zlim([abs_min-space, abs_max+space])
+        ax.set_xlim([-abs_max-space, abs_max+space])
+        ax.set_ylim([-abs_max-space, abs_max+space])
+        ax.set_zlim([-abs_max-space, abs_max+space])

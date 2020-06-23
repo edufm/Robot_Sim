@@ -1,6 +1,6 @@
 import robot_sim as rs
 
-method = "DH"
+method = "Cordsys"
 
 # Method with normal coordinates
 if method == "Cordsys":
