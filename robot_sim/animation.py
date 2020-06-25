@@ -8,13 +8,27 @@ Created on Sun Jun 21 17:44:56 2020
 from copy import deepcopy
 
 import numpy as np
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 from .cordinates import trace
 
 class animate():
-    def __init__(self, dvhb, initial_joints, final_joints, frames=60, save=False):
+    """    
+    Class that animates a dvhb object based on diferent joint positions
+    obs: funtions for this class are only used by the class itself and 
+    will not work outside of animation context
+    
+    args:
+        dvhb: dvhb object already configured with mtrix and joints
+        poses: list of poses the robot should move to and from
+        frames: number of frames in teh animation (recomended 30 per pose), default=60
+        save: if true will save the animation as a gif in the current execution folder
+      
+    returns:
+        perform the robot animation to the poses
+    """
+    def __init__(self, dvhb, poses, frames=60, save=False):
         
         from IPython import get_ipython
         ipy = get_ipython()
@@ -22,7 +36,11 @@ class animate():
             ipy.run_line_magic('matplotlib', 'auto')
 
         self.dvhb = deepcopy(dvhb)
-        self.animation_pos = np.linspace(initial_joints, final_joints, frames)
+        
+        frames = frames//len(poses)
+        self.animation_pos = []
+        for i in range(len(poses)-1):
+            self.animation_pos += list(np.linspace(poses[i], poses[i+1], frames))
         
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111, projection='3d')
@@ -33,12 +51,16 @@ class animate():
         self.ax.plot([0], [0], [0], "ro")
         
         #Cria os ponos iniciais e finais
-        self.dvhb.recalculate_joints(final_joints)
-        self.p_fin = self.dvhb.final_position()[:3, 3]  
-        self.p_final, = self.ax.plot([], [], [], "rx")
-        self.dvhb.recalculate_joints(initial_joints)
-        self.p_ini = self.dvhb.final_position()[:3, 3] 
-        self.p_inicial, = self.ax.plot([], [], [], "gx")
+        self.stop_p = [[], [], []]
+        for pose in poses:
+            self.dvhb.recalculate_joints(pose)
+            x, y, z = self.dvhb.final_position()[:3, 3]
+            self.stop_p[0].append(x)
+            self.stop_p[1].append(y)
+            self.stop_p[2].append(z)
+            
+        self.stop_points, = self.ax.plot([], [], [], "rx")
+        self.dvhb.recalculate_joints(poses[0])
         
         # Cria os eixos de coordenadas da ponta do robo
         self.quiverx, = self.ax.plot([], [], [], color="red")
@@ -53,11 +75,12 @@ class animate():
         self.ax.set_ylim(*self.limits)
         self.ax.set_zlim(*self.limits)
 
-        anim = FuncAnimation(self.fig, self.animate,
-                             frames=frames, interval=20, blit=True)
+        anim = FuncAnimation(self.fig, self.animate, 
+                             frames=len(self.animation_pos), interval=20, blit=True)
     
         if save:
             anim.save('robot.gif', writer='imagemagick')
+    
     
     def animate(self, i):
 
@@ -92,17 +115,13 @@ class animate():
         self.quiverz.set_ydata([y, y+cord_z[1]])
         self.quiverz.set_3d_properties([z, z+cord_z[2]])
         
-        self.p_final.set_xdata(self.p_fin[0])
-        self.p_final.set_ydata(self.p_fin[1])
-        self.p_final.set_3d_properties(self.p_fin[2])
-        
-        self.p_inicial.set_xdata(self.p_ini[0])
-        self.p_inicial.set_ydata(self.p_ini[1])
-        self.p_inicial.set_3d_properties(self.p_ini[2])
+        self.stop_points.set_xdata(self.stop_p[0])
+        self.stop_points.set_ydata(self.stop_p[1])
+        self.stop_points.set_3d_properties(self.stop_p[2])
         
         return (self.line, self.points, 
                 self.quiverx, self.quivery, self.quiverz, 
-                self.p_inicial, self.p_final)
+                self.stop_points)
     
 
     def get_limits(self):

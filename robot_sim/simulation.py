@@ -8,16 +8,25 @@ Created on Sun Jun 21 17:44:56 2020
 from copy import deepcopy
 
 import numpy as np
-
-from matplotlib.widgets import Slider, Button
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.widgets import Slider, Button
 
 from .cordinates import trace
 
 axcolor = 'lightgoldenrodyellow'
-
 class simulate():
+    """    
+    Class that simulates a dvhb object based on diferent inputs in sliders
+    obs: funtions for this class are only used by the class itself and 
+    will not work outside of animation context
+    
+    args:
+        dvhb: dvhb object already configured with mtrix and joints
+      
+    returns:
+        perform the simulation of the robot with sliders to represent the 
+        inputs of the joint
+    """
     def __init__(self, dvhb):
         
         from IPython import get_ipython
@@ -127,6 +136,7 @@ class simulate():
         self.ax.set_zlabel("Z")
         
         self.fig.canvas.draw_idle()
+        plt.pause(0.0001) 
     
     
     def reset(self, event):

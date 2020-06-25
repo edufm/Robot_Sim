@@ -1,14 +1,13 @@
 import numpy as np
 
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 def plot(cordsys_list, ind_limit=False):
-    """Function to visualize the cordinate systems created limiting axis to nearby constrains
+    """Function to visualize the cordinate systems created
     
     args:
         cordsys_list: a list of cordsys or transformation matrix
-        ind_limit: limit each plot axle individually or by the global min/max, default=False
+        ind_limit: boolean to limit each plot axle individually or by the global min/max, default=False
         
     returns:
         plot with the cordinates system

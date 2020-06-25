@@ -1,35 +1,25 @@
 """
 This script intends to help the user understand the functions available to the 
-Denavit-Hatemberg object in the module with a inveted model
+Denavit-Hatemberg object in the module with a Pick&Place model
 """
 
 import robot_sim as rs
 
-l0 = 0.08956
-l1 = 0
-l2 = 0.425
-l3 = 0
-l4 = 0.3922
-l5 = 0.1091
-l6 = 0.09465 
-l7 = 0.0823
+# Method with Denavit_Hatemberg
+# theta, a, d, alpha
 
 th0 = 0
-th1 = 90
-th2 = 0
-th3 = 270
-th4 = 0
-th5 = 0
+d1 = 2
+d2 = 1.5
+th3 = 0
 
-dh_matrix = [[th0,  l0,  0,    90],
-             [th1,  l1, l2,     0],
-             [th2, -l3, l4,     0],
-             [th3,  l5,  0,   -90],
-             [th4,  l6,  0,    90],
-             [th5,  l7,  0,     0]]
+dh_matrix = [[th0, 10,   0,  90],
+             [0,   d1,   0,  90],
+             [0,   d2,   0,   0],
+             [th3,  0,   0,   0]]
 
 # Defines the DvHb object
-dvhb = rs.DvHb(dh_matrix, joints=[(0,"r"), (1,"r"), (2,"r"), (3,"r"), (4, "r"), (5,"r")])
+dvhb = rs.DvHb(dh_matrix, joints=[(0,"r"), (1,"t"), (2,"t"), (3,"r")])
 
 # Code to view the robot 
 if False:
@@ -44,18 +34,18 @@ if False:
 # Code to animate robot movement
 if False:
     # Define the joint positions the robot will have
-    poses = [[0,90,0,0,0,0], [0,135,-60,90,90,0]]
+    poses = [[0, 7, 2, 0], [90, 3, 5, 90], [0, 7, 2, 0]]
     # Animate the robot to those positions
     rs.animate(dvhb, poses, frames=30*len(poses))
 
 
 # Code to try to move robot to new position and animate the movement
-if False:
+if False:   
     # Create new transformation matrix for the robot to follow
-    new_coords = rs.coords_to_cordsys(-0.3030, -0.1091, 0.6988, 0, -75, 90)
+    new_coords = rs.coords_to_cordsys(-0.5, -0.5, 0.5, 0, 180, 0)    
     
     # Calculate the new joints positions
-    joint_pos = dvhb.inverse_kinematic(new_coords, trys=10, castrule=None)
+    joint_pos = dvhb.inverse_kinematic(new_coords, trys=10)
     
     # Show the results to the user
     print(joint_pos)
