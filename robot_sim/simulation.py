@@ -10,6 +10,7 @@ from copy import deepcopy
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, Button
+from mpl_toolkits.mplot3d import Axes3D
 
 from .cordinates import trace
 
@@ -33,7 +34,6 @@ class simulate():
         ipy = get_ipython()
         if ipy != None:
             ipy.run_line_magic('matplotlib', 'auto')
-
         
         self.dvhb = deepcopy(dvhb)
         self.limits = self.get_limits()

@@ -1,6 +1,7 @@
 import numpy as np
 
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 def plot(cordsys_list, ind_limit=False):
     """Function to visualize the cordinate systems created
@@ -12,6 +13,13 @@ def plot(cordsys_list, ind_limit=False):
     returns:
         plot with the cordinates system
     """
+    
+    from IPython import get_ipython
+    ipy = get_ipython()
+    if ipy != None:
+        ipy.run_line_magic('matplotlib', 'auto')
+    
+    
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     

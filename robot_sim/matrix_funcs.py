@@ -47,6 +47,7 @@ def sin(deg):
     """    
     return np.sin(np.deg2rad(deg))
 
+
 def cos(deg):
     """ 
     Function to calculate cosisne of angle in degrees
